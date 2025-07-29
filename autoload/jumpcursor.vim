@@ -64,6 +64,8 @@ function! s:fill_specific_line(lnum) abort
   let bufnr = bufnr()
   let mark_idx = 0
   let mark_len = len(g:jumpcursor_marks)
+  let word_head = 1
+  let first_time = 1
 
   for i in range(len(text))
     if mark_idx >= mark_len
@@ -71,7 +73,16 @@ function! s:fill_specific_line(lnum) abort
     endif
 
     if text[i] ==# ' ' || text[i] ==# "\t"
+      let word_head = 1
       continue
+    elseif first_time == 0 && stridx('!"#$%&''()*+,-./:;<=>?[\]^_`{|}~', text[i]) >= 0
+      " '!"#$%&''()*+,-./:;<=>?[\]^_`{|}~'
+      let word_head = 1
+      continue
+    elseif word_head == 0
+      continue
+    else
+      let word_head = 0
     endif
 
     let mark = g:jumpcursor_marks[mark_idx]
@@ -85,6 +96,7 @@ function! s:fill_specific_line(lnum) abort
           \ ]})
 
     let s:jumpcursor_mark_cols[mark] = i
+    let first_time = 0
   endfor
   redraw!
 endfunction
