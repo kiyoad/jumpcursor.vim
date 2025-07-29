@@ -52,7 +52,9 @@ function! s:fill_window() abort
       call add(linecols, [start_line-1, i])
     endfor
     let s:jumpcursor_mark_lnums[mark] = start_line
-    let mark_idx += 1
+    if len(text) > 0
+      let mark_idx += 1
+    endif
     let start_line += 1
   endwhile
 endfunction
