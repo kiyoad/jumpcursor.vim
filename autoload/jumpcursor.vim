@@ -16,6 +16,16 @@ function! s:fill_window() abort
   let end_line = line('w$')
   let bufnr = bufnr()
   let mark_len = len(g:jumpcursor_marks)
+  let current_line = line('.')
+  let mark_start_line = current_line - (mark_len / 2)
+  let mark_end_line = current_line + (mark_len / 2)
+
+  if mark_end_line > end_line
+    let mark_start_line -= (mark_end_line - end_line - 1)
+  endif
+  if start_line < mark_start_line
+    let start_line = mark_start_line
+  endif
 
   " [[1, 1], [1,2], [1,5]]
   let linecols = []
