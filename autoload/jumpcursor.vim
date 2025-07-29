@@ -2,6 +2,9 @@
 " Author: skanehira
 " License: MIT
 
+" if exists('g:jumpcursor_marks')
+"   unlet g:jumpcursor_marks
+" endif
 let g:jumpcursor_marks = get(g:, 'jumpcursor_marks', split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@[;:],./_-^\1234567890', '\zs'))
 
 let s:jumpcursor_mark_lnums = {}
