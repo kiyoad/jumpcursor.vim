@@ -64,25 +64,35 @@ function! s:fill_specific_line(lnum) abort
   let bufnr = bufnr()
   let mark_idx = 0
   let mark_len = len(g:jumpcursor_marks)
-  let word_head = 1
-  let first_time = 1
+  let ctype = 0
+  let prev_ctype = 0
+  let save_ic = &ignorecase
+  set noignorecase
 
   for i in range(len(text))
     if mark_idx >= mark_len
       break
     endif
 
-    if text[i] ==# ' ' || text[i] ==# "\t"
-      let word_head = 1
+    let c = text[i]
+
+    if c ==# ' ' || c ==# "\t"
+      let prev_ctype = 0
       continue
-    elseif first_time == 0 && stridx('!"#$%&''()*+,-./:;<=>?[\]^_`{|}~', text[i]) >= 0
-      " '!"#$%&''()*+,-./:;<=>?[\]^_`{|}~'
-      let word_head = 1
-      continue
-    elseif word_head == 0
-      continue
+    endif
+
+    if match(c, '^[0-9]$') != -1
+      let ctype = 1
+    elseif match(c, '^[A-Z]$') != -1
+      let ctype = 2
+    elseif match(c, '^[a-z]$') != -1
+      let ctype = 3
     else
-      let word_head = 0
+      let ctype = 4
+    endif
+
+    if prev_ctype == ctype
+      continue
     endif
 
     let mark = g:jumpcursor_marks[mark_idx]
@@ -96,8 +106,9 @@ function! s:fill_specific_line(lnum) abort
           \ ]})
 
     let s:jumpcursor_mark_cols[mark] = i
-    let first_time = 0
+    let prev_ctype = ctype
   endfor
+  let &ignorecase = save_ic
   redraw!
 endfunction
 
