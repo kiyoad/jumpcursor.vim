@@ -89,7 +89,7 @@ function! s:fill_specific_line(lnum) abort
     let mark_idx += 1
 
     call nvim_buf_set_extmark(bufnr, s:jumpcursor_ns, a:lnum-1, i, {
-          \ 'virt_text_pos': 'overlay',
+          \ 'virt_text_pos': 'inline',
           \ 'virt_text':
           \ [
             \ [mark, 'ErrorMsg']
